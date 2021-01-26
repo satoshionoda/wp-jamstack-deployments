@@ -2,11 +2,10 @@
 
 /**
  * Plugin Name: JAMstack Deployments MOD
- * Plugin URI: https://github.com/YOHAK/wp-jamstack-deployments-mod
+ * Plugin URI: https://github.com/satoshionoda/wp-jamstack-deployments
  * Description: A WordPress plugin for JAMstack deployments on Netlify (and other platforms).
- * Author: Christopher Geary
- * Author URI: https://YOHAK.com
- * Version: 1.1.1
+ * Author: Christopher Geary / modified by Satoshi Onoda
+ * Version: 1.1.1-mod
  */
 
 if (!defined('ABSPATH')) {
