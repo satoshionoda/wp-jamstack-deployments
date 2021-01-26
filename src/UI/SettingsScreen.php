@@ -1,6 +1,6 @@
 <?php
 
-namespace Crgeary\JAMstackDeployments\UI;
+namespace YOHAK\JAMstackDeployments\UI;
 
 class SettingsScreen
 {
@@ -22,10 +22,10 @@ class SettingsScreen
     public static function addMenu()
     {
         add_options_page(
-            __( 'JAMstack Deployments (Settings)', 'wp-jamstack-deployments' ),
-            __( 'Deployments', 'wp-jamstack-deployments' ),
+            __( 'JAMstack Deployments (Settings)', 'wp-jamstack-deployments-mod' ),
+            __( 'Deployments(MOD)', 'wp-jamstack-deployments-mod' ),
             'manage_options',
-            'wp-jamstack-deployments-settings',
+            'wp-jamstack-deployments-mod-settings',
             [__CLASS__, 'renderPage']
         );
     }
@@ -44,21 +44,21 @@ class SettingsScreen
             <form method="post" action="<?= esc_url(admin_url('options.php')); ?>">
                 <?php
 
-                settings_fields(CRGEARY_JAMSTACK_DEPLOYMENTS_OPTIONS_KEY);
-                do_settings_sections(CRGEARY_JAMSTACK_DEPLOYMENTS_OPTIONS_KEY);
+                settings_fields(YOHAK_jamstack_deployments_mod_OPTIONS_KEY);
+                do_settings_sections(YOHAK_jamstack_deployments_mod_OPTIONS_KEY);
 
-                submit_button( __( 'Save Settings', 'wp-jamstack-deployments' ), 'primary', 'submit', false);
+                submit_button( __( 'Save Settings', 'wp-jamstack-deployments-mod' ), 'primary', 'submit', false);
 
                 $uri = wp_nonce_url(
-                    admin_url('admin.php?page=wp-jamstack-deployments-settings&action=jamstack-deployment-trigger'),
-                    'crgeary_jamstack_deployment_trigger',
-                    'crgeary_jamstack_deployment_trigger'
+                    admin_url('admin.php?page=wp-jamstack-deployments-mod-settings&action=jamstack-deployment-trigger'),
+                    'YOHAK_jamstack_deployment_trigger',
+                    'YOHAK_jamstack_deployment_trigger'
                 );
 
                 ?>
 
-                <p><?php _e( 'You must save your settings before testing a deployment.', 'wp-jamstack-deployments')?> </p>
-                <a href="<?= esc_url($uri); ?>" class="button"> <?php _e('Test Deployment', 'wpjamstack-deployments' ) ?> </a>
+                <p><?php _e( 'You must save your settings before testing a deployment.', 'wp-jamstack-deployments-mod')?> </p>
+                <a href="<?= esc_url($uri); ?>" class="button"> <?php _e('Test Deployment', 'wpjamstack-deployments-mod' ) ?> </a>
 
             </form>
 

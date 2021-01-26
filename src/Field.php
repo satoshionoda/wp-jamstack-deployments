@@ -1,6 +1,6 @@
 <?php
 
-namespace Crgeary\JAMstackDeployments;
+namespace YOHAK\JAMstackDeployments;
 
 class Field
 {

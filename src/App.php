@@ -1,10 +1,10 @@
 <?php
 
-namespace Crgeary\JAMstackDeployments;
+namespace YOHAK\JAMstackDeployments;
 
-use Crgeary\JAMstackDeployments\UI\SettingsScreen;
-use Crgeary\JAMstackDeployments\WebhookTrigger;
-use Crgeary\JAMstackDeployments\Settings;
+use YOHAK\JAMstackDeployments\UI\SettingsScreen;
+use YOHAK\JAMstackDeployments\WebhookTrigger;
+use YOHAK\JAMstackDeployments\Settings;
 
 class App
 {
@@ -48,7 +48,7 @@ class App
      */
     protected function constants()
     {
-        define('CRGEARY_JAMSTACK_DEPLOYMENTS_OPTIONS_KEY', 'wp_jamstack_deployments');
+        define('YOHAK_jamstack_deployments_mod_OPTIONS_KEY', 'wp_jamstack_deployments_mod');
     }
 
     /**
@@ -58,13 +58,13 @@ class App
      */
     protected function includes()
     {
-        require_once (CRGEARY_JAMSTACK_DEPLOYMENTS_PATH.'/src/UI/SettingsScreen.php');
+        require_once (YOHAK_jamstack_deployments_mod_PATH.'/src/UI/SettingsScreen.php');
 
-        require_once (CRGEARY_JAMSTACK_DEPLOYMENTS_PATH.'/src/Settings.php');
-        require_once (CRGEARY_JAMSTACK_DEPLOYMENTS_PATH.'/src/WebhookTrigger.php');
-        require_once (CRGEARY_JAMSTACK_DEPLOYMENTS_PATH.'/src/Field.php');
+        require_once (YOHAK_jamstack_deployments_mod_PATH.'/src/Settings.php');
+        require_once (YOHAK_jamstack_deployments_mod_PATH.'/src/WebhookTrigger.php');
+        require_once (YOHAK_jamstack_deployments_mod_PATH.'/src/Field.php');
 
-        require_once (CRGEARY_JAMSTACK_DEPLOYMENTS_PATH.'/src/functions.php');
+        require_once (YOHAK_jamstack_deployments_mod_PATH.'/src/functions.php');
     }
 
     /**
@@ -74,8 +74,8 @@ class App
      */
     protected function hooks()
     {
-        register_activation_hook(CRGEARY_JAMSTACK_DEPLOYMENTS_FILE, [$this, 'activation']);
-        register_deactivation_hook(CRGEARY_JAMSTACK_DEPLOYMENTS_FILE, [$this, 'deactivation']);
+        register_activation_hook(YOHAK_jamstack_deployments_mod_FILE, [$this, 'activation']);
+        register_deactivation_hook(YOHAK_jamstack_deployments_mod_FILE, [$this, 'deactivation']);
 
         SettingsScreen::init();
         Settings::init();

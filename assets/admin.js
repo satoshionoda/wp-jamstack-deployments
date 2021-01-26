@@ -1,7 +1,7 @@
 ;(function ($, window, document, undefined) {
     $(function () {
         
-        var image = $('.wp-jamstack-deployments-badge img');
+        var image = $('.wp-jamstack-deployments-mod-badge img');
         var imageSrc = image.prop('src');
         var refreshTimout = null;
         
@@ -16,14 +16,15 @@
 
         refreshTimout = setTimeout(updateNetlifyBadgeUrl, 15000);
         
-        $('.wp-jamstack-deployments-button').click(function (e) {
+        $('.wp-jamstack-deployments-mod-button').click(function (e) {
+            console.log(wpjd);
             e.preventDefault();
             $.ajax({
                 type: 'POST',
-                url: wpjd.ajaxurl,
+                url: wpjd_mod.ajaxurl,
                 data: {
-                    action: 'wp_jamstack_deployments_manual_trigger',
-                    security: wpjd.deployment_button_nonce,
+                    action: 'wp_jamstack_deployments_mod_manual_trigger',
+                    security: wpjd_mod.deployment_button_nonce,
                 },
                 dataType: 'json',
                 success: updateNetlifyBadgeUrl,

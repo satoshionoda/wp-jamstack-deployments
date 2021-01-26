@@ -1,6 +1,6 @@
 <?php
 
-namespace Crgeary\JAMstackDeployments;
+namespace YOHAK\JAMstackDeployments;
 
 class WebhookTrigger
 {
@@ -20,7 +20,7 @@ class WebhookTrigger
         add_action('wp_enqueue_scripts', [__CLASS__, 'enqueueScripts']);
         add_action('admin_enqueue_scripts', [__CLASS__, 'enqueueScripts']);
 
-        add_action('wp_ajax_wp_jamstack_deployments_manual_trigger', [__CLASS__, 'ajaxTrigger']);
+        add_action('wp_ajax_wp_jamstack_deployments_mod_manual_trigger', [__CLASS__, 'ajaxTrigger']);
     }
 
     /**
@@ -38,15 +38,15 @@ class WebhookTrigger
         }
 
         $saved_post_statuses = isset($option['webhook_post_statuses']) ? $option['webhook_post_statuses'] : ['publish', 'private', 'trash'];
-        $statuses = apply_filters('jamstack_deployments_post_statuses', $saved_post_statuses, $id, $post);
+        $statuses = apply_filters('jamstack_deployments_mod_post_statuses', $saved_post_statuses, $id, $post);
 
         if (!in_array(get_post_status($id), $statuses, true)) {
             return;
         }
 
-        $option = jamstack_deployments_get_options();
+        $option = jamstack_deployments_mod_get_options();
         $saved_post_types = isset($option['webhook_post_types']) ? $option['webhook_post_types'] : [];
-        $post_types = apply_filters('jamstack_deployments_post_types', $saved_post_types, $id, $post);
+        $post_types = apply_filters('jamstack_deployments_mod_post_types', $saved_post_types, $id, $post);
 
         if (!in_array(get_post_type($id), $post_types, true)) {
             return;
@@ -118,8 +118,8 @@ class WebhookTrigger
      */
     protected static function canFireForTaxonomy($id, $tax_id, $tax_slug)
     {
-        $option = jamstack_deployments_get_options();
-        $taxonomies = apply_filters('jamstack_deployments_taxonomies', $option['webhook_taxonomies'] ?: [], $id, $tax_id);
+        $option = jamstack_deployments_mod_get_options();
+        $taxonomies = apply_filters('jamstack_deployments_mod_taxonomies', $option['webhook_taxonomies'] ?: [], $id, $tax_id);
 
         return in_array($tax_slug, $taxonomies, true);
     }
@@ -138,22 +138,22 @@ class WebhookTrigger
 
         ?><style>
 
-        #wpadminbar .wp-jamstack-deployments-button > a {
+        #wpadminbar .wp-jamstack-deployments-mod-button > a {
             background-color: rgba(255, 255, 255, .2) !important;
             color: #FFFFFF !important;
         }
-        #wpadminbar .wp-jamstack-deployments-button > a:hover,
-        #wpadminbar .wp-jamstack-deployments-button > a:focus {
+        #wpadminbar .wp-jamstack-deployments-mod-button > a:hover,
+        #wpadminbar .wp-jamstack-deployments-mod-button > a:focus {
             background-color: rgba(255, 255, 255, .25) !important;
         }
 
-        #wpadminbar .wp-jamstack-deployments-button svg {
+        #wpadminbar .wp-jamstack-deployments-mod-button svg {
             width: 12px;
             height: 12px;
             margin-left: 5px;
         }
 
-        #wpadminbar .wp-jamstack-deployments-badge > .ab-item {
+        #wpadminbar .wp-jamstack-deployments-mod-badge > .ab-item {
             display: flex;
             align-items: center;
         }
@@ -169,15 +169,15 @@ class WebhookTrigger
     public static function enqueueScripts()
     {
         wp_enqueue_script(
-            'wp-jamstack-deployments-adminbar',
-            CRGEARY_JAMSTACK_DEPLOYMENTS_URL.'/assets/admin.js',
+            'wp-jamstack-deployments-mod-adminbar',
+            YOHAK_jamstack_deployments_mod_URL.'/assets/admin.js',
             ['jquery'],
-            filemtime(CRGEARY_JAMSTACK_DEPLOYMENTS_PATH.'/assets/admin.js')
+            filemtime(YOHAK_jamstack_deployments_mod_PATH.'/assets/admin.js')
         );
 
-        $button_nonce = wp_create_nonce('wp-jamstack-deployments-button-nonce');
+        $button_nonce = wp_create_nonce('wp-jamstack-deployments-mod-button-nonce');
 
-        wp_localize_script('wp-jamstack-deployments-adminbar', 'wpjd', [
+        wp_localize_script('wp-jamstack-deployments-mod-adminbar', 'wpjd_mod', [
             'ajaxurl' => admin_url('admin-ajax.php'),
             'deployment_button_nonce' => $button_nonce,
         ]);
@@ -191,7 +191,7 @@ class WebhookTrigger
      */
     public static function adminBarTriggerButton($bar)
     {
-        $option = jamstack_deployments_get_options();
+        $option = jamstack_deployments_mod_get_options();
         $image = '';
 
         if (!empty($option['deployment_badge_url'])) {
@@ -202,24 +202,24 @@ class WebhookTrigger
 
         if (!empty($image)) {
             $bar->add_node([
-                'id' => 'wp-jamstack-deployments-netlify-badge',
+                'id' => 'wp-jamstack-deployments-mod-netlify-badge',
                 'title' => sprintf('<img src="%s" alt />', $image),
                 'href' => empty($option['deployment_badge_link_url']) ? 'javascript:void(0)' : $option['deployment_badge_link_url'],
                 'parent' => 'top-secondary',
                 'meta' => [
-                    'class' => 'wp-jamstack-deployments-badge',
+                    'class' => 'wp-jamstack-deployments-mod-badge',
                     'target' => empty($option['deployment_badge_link_url']) ? '_self' : '_blank',
                 ]
             ]);
         }
 
         $bar->add_node([
-            'id' => 'wp-jamstack-deployments',
-            'title' => 'Deploy Website <svg aria-hidden="true" focusable="false" data-icon="upload" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path fill="currentColor" d="M296 384h-80c-13.3 0-24-10.7-24-24V192h-87.7c-17.8 0-26.7-21.5-14.1-34.1L242.3 5.7c7.5-7.5 19.8-7.5 27.3 0l152.2 152.2c12.6 12.6 3.7 34.1-14.1 34.1H320v168c0 13.3-10.7 24-24 24zm216-8v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h136v8c0 30.9 25.1 56 56 56h80c30.9 0 56-25.1 56-56v-8h136c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"></path></svg>',
+            'id' => 'wp-jamstack-deployments-mod',
+            'title' => 'Deploy Staging <svg aria-hidden="true" focusable="false" data-icon="upload" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path fill="currentColor" d="M296 384h-80c-13.3 0-24-10.7-24-24V192h-87.7c-17.8 0-26.7-21.5-14.1-34.1L242.3 5.7c7.5-7.5 19.8-7.5 27.3 0l152.2 152.2c12.6 12.6 3.7 34.1-14.1 34.1H320v168c0 13.3-10.7 24-24 24zm216-8v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h136v8c0 30.9 25.1 56 56 56h80c30.9 0 56-25.1 56-56v-8h136c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"></path></svg>',
             'parent' => 'top-secondary',
             'href' => 'javascript:void(0)',
             'meta' => [
-                'class' => 'wp-jamstack-deployments-button'
+                'class' => 'wp-jamstack-deployments-mod-button'
             ]
         ]);
     }
@@ -235,11 +235,11 @@ class WebhookTrigger
             return;
         }
         
-        check_admin_referer('crgeary_jamstack_deployment_trigger', 'crgeary_jamstack_deployment_trigger');
+        check_admin_referer('YOHAK_jamstack_deployment_trigger', 'YOHAK_jamstack_deployment_trigger');
 
         self::fireWebhook();
 
-        wp_redirect(admin_url('admin.php?page=wp-jamstack-deployments-settings'));
+        wp_redirect(admin_url('admin.php?page=wp-jamstack-deployments-mod-settings'));
         exit;
     }
 
@@ -255,17 +255,17 @@ class WebhookTrigger
     public static function triggerPostTransition($new, $old, $post)
     {
         $id = $post->ID;
-        $option = jamstack_deployments_get_options();
+        $option = jamstack_deployments_mod_get_options();
         
         $saved_post_types = isset($option['webhook_post_types']) ? $option['webhook_post_types'] : [];
-        $post_types = apply_filters('jamstack_deployments_post_types', $saved_post_types, $id, $post);
+        $post_types = apply_filters('jamstack_deployments_mod_post_types', $saved_post_types, $id, $post);
 
         if (!in_array(get_post_type($id), $post_types, true)) {
             return;
         }
 
         $saved_post_statuses = isset($option['webhook_post_statuses']) ? $option['webhook_post_statuses'] : ['publish', 'private', 'trash'];
-        $statuses = apply_filters('jamstack_deployments_post_statuses', $saved_post_statuses, $id, $post);
+        $statuses = apply_filters('jamstack_deployments_mod_post_statuses', $saved_post_statuses, $id, $post);
 
         if (!in_array(get_post_status($id), $statuses, true)) {
             return;
@@ -281,7 +281,7 @@ class WebhookTrigger
      */
     public static function ajaxTrigger()
     {
-        check_ajax_referer('wp-jamstack-deployments-button-nonce', 'security');
+        check_ajax_referer('wp-jamstack-deployments-mod-button-nonce', 'security');
 
         self::fireWebhook();
 
@@ -296,7 +296,7 @@ class WebhookTrigger
      */
     public static function fireWebhook()
     {
-        $webhook = jamstack_deployments_get_webhook_url();
+        $webhook = jamstack_deployments_mod_get_webhook_url();
 
         if (!$webhook) {
             return;
@@ -306,13 +306,13 @@ class WebhookTrigger
             return;
         }
 
-        $args = apply_filters('jamstack_deployments_webhook_request_args', [
+        $args = apply_filters('jamstack_deployments_mod_webhook_request_args', [
             'blocking' => false
         ]);
 
-        $method = jamstack_deployments_get_webhook_method();
+        $method = jamstack_deployments_mod_get_webhook_method();
 
-        do_action('jamstack_deployments_before_fire_webhook');
+        do_action('jamstack_deployments_mod_before_fire_webhook');
 
         if ($method === 'get') {
             $return = wp_safe_remote_get($webhook, $args);
@@ -320,7 +320,7 @@ class WebhookTrigger
             $return = wp_safe_remote_post($webhook, $args);
         }
 
-        do_action('jamstack_deployments_after_fire_webhook');
+        do_action('jamstack_deployments_mod_after_fire_webhook');
 
         return $return;
     }
