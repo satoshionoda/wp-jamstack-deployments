@@ -1,4 +1,4 @@
-=== JAMstack Deployments ===
+=== JAMstack Deployments MOD ===
 Contributors: Satoshi Onoda(YOHAK), crgeary
 Tags: jamstack, netlify, webhook
 Tested up to: 5.5.3

@@ -1,3 +1,7 @@
+## 1.1.1-mod
+
+- modified variables so that this version can install separately from the original
+
 ## 1.1.1
 
 - Add width/height to admin bar SVG to fix FOUC
